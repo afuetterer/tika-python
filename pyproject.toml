@@ -52,9 +52,7 @@ repository = "http://github.com/chrismattmann/tika-python.git"
 tika-python = "tika.tika:main"
 
 [tool.setuptools]
-packages.find.include = [
-  "tika*",
-]
+packages.find.include = [ "tika*" ]
 
 [tool.setuptools.dynamic]
 version = {attr = "tika.__version__"}
