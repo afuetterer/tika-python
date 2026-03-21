@@ -4,7 +4,7 @@ name: Generate and deploy documentation
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main", "master", "add-automated-documentation"]
+    branches: ["master"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -29,11 +29,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: python -m pip install --upgrade pip
+      - run: pip --version
       - name: Install dependencies
         run: |
-          pip install sphinx furo myst-parser
+          pip install . --group=docs
       - name: Sphinx APIDoc
         run: |
           sphinx-apidoc -f -o docs/source/ .
@@ -43,7 +47,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload entire repository
           path: './docs/build/html'

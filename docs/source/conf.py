@@ -5,14 +5,9 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-import os
-import sys
-
-# Add the parent directory of the documentation root to sys.path
-sys.path.insert(0, os.path.abspath("../.."))
 
 project = 'tika-python'
-copyright = '2024, Chris A. Mattmann'
+copyright = '2026, Chris A. Mattmann'
 author = 'Chris A. Mattmann'
 
 # -- General configuration ---------------------------------------------------
@@ -26,16 +21,13 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.todo",
     "sphinx.ext.duration",
-    "myst_parser"
+    "myst_parser",
 ]
 
-templates_path = ['_templates']
-exclude_patterns = ['tika.tests*']
-
-
+exclude_patterns = ['_build']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'furo'
-html_static_path = ['_static']
+
