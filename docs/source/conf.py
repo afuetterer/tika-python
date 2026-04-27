@@ -3,49 +3,64 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import importlib.metadata
+from datetime import datetime, timezone
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-import os
-import sys
-
-# Add the parent directory of the documentation root to sys.path
-sys.path.insert(0, os.path.abspath("../.."))
-
 project = "tika-python"
-copyright = "2024, Chris A. Mattmann"
 author = "Chris A. Mattmann"
+current_year = datetime.now(timezone.utc).astimezone().year
+copyright = f"{current_year}, {author}"
+version = importlib.metadata.version("tika")
+release = version
 
 # -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+# Ref: https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.apidoc",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.doctest",
     "sphinx.ext.autosectionlabel",
-    "sphinx.ext.todo",
-    "sphinx.ext.duration",
     "myst_parser",
 ]
 
-templates_path = ["_templates"]
-exclude_patterns = ["tika.tests*"]
+master_doc = "index"
+exclude_patterns = ["_build"]
 
+nitpicky = True
+
+# -- sphinx-apidoc configuration ---------------------------------------------------
+# Ref: https://www.sphinx-doc.org/en/master/usage/extensions/apidoc.html#confval-apidoc_modules
+apidoc_modules = [
+    {
+        "path": "../../tika",
+        "destination": "api",
+        "separate_modules": True,
+        "module_first": True,
+    },
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
+REPO_URL = "https://github.com/chrismattmann/tika-python"
+
 html_theme = "furo"
-html_static_path = ["_static"]
+# html_static_path = ["_static"]
+
 html_theme_options = {
-    "source_repository": "https://github.com/chrismattmann/tika-python",
-    "source_branch": "master",
-    "source_directory": "docs/source/",
+    "source_repository": REPO_URL,
+    # "source_branch": "master",
+    # "source_directory": "docs/source/",
+    "top_of_page_buttons": [], # Note: do not show edit and view buttons
     "footer_icons": [
         {
             "name": "GitHub",
-            "url": "https://github.com/chrismattmann/tika-python",
+            "url": REPO_URL,
             # Embedded SVG instructions from furo docs
             # Ref: https://pradyunsg.me/furo/customisation/footer/#configuration
             "html": """
@@ -57,3 +72,5 @@ html_theme_options = {
         },
     ],
 }
+# html_copy_source = False
+# html_show_sourcelink = False
