@@ -2,10 +2,9 @@
 name: Documentation
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["master"]
-
+  workflow_call:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -22,12 +21,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    # TODO: ubuntu slim enough?
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -36,19 +35,25 @@ jobs:
       - run: |
           python -m python -m pip install --upgrade pip
           python -m pip install . --group=docs
-      - name: Sphinx APIDoc
-        run: |
-          sphinx-apidoc --force -o docs/source/ .
+
+      # TODO: This gets included in docs/conf.py
+
+      # - name: Sphinx APIDoc
+      #   run: |
+      #     sphinx-apidoc --force -o docs/source/ .
       - name: Sphinx build
         run: |
           sphinx-build --builder html docs/source/ docs/build/html
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          # Upload entire repository
-          path: './docs/build/html'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+
+      # # TODO: From here only on master branch
+
+      # - name: Setup Pages
+      #   uses: actions/configure-pages@v5
+      # - name: Upload artifact
+      #   uses: actions/upload-pages-artifact@v4
+      #   with:
+      #     # Upload entire repository
+      #     path: './docs/build/html'
+      # - name: Deploy to GitHub Pages
+      #   id: deployment
+      #   uses: actions/deploy-pages@v4
