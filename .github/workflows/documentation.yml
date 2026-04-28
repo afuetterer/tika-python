@@ -21,11 +21,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    # TODO: ubuntu slim enough?
+  # Build documentation, upload html
+  # permissions: upload
+  build:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
@@ -33,7 +31,27 @@ jobs:
         with:
           python-version: "3.14"
       - run: |
-          python -m python -m pip install --upgrade pip
+          python -m pip install --upgrade pip
+          python -m pip install . --group=docs
+          python -m pip list
+      - run: |
+          sphinx-build --builder html docs/source/ docs/build/html
+
+  deploy:
+    # permissions: upload, pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # TODO: ubuntu slim enough?
+    runs-on: ubuntu-slim
+    # download html
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - run: |
+          python -m pip install --upgrade pip
           python -m pip install . --group=docs
 
       # TODO: This gets included in docs/conf.py
